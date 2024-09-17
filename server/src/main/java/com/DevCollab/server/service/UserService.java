@@ -8,4 +8,6 @@ public interface UserService {
 
 
     String registerUser(User user);
+
+    String verify(User user);
 }
