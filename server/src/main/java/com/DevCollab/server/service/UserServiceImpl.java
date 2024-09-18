@@ -1,5 +1,6 @@
 package com.DevCollab.server.service;
 
+import com.DevCollab.server.model.LoginRequest;
 import com.DevCollab.server.model.User;
 import com.DevCollab.server.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +38,10 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public String verify(User user) {
+    public String verify(LoginRequest loginRequest) {
 
-        Authentication authentication=authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword()));
+        Authentication authentication=authManager.
+                authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),loginRequest.getPassword()));
 
         if(authentication.isAuthenticated())
             return "Success";
