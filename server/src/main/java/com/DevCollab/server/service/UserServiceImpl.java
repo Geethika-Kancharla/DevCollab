@@ -22,6 +22,9 @@ public class UserServiceImpl implements UserService{
     @Autowired
     AuthenticationManager authManager;
 
+    @Autowired
+    private JWTService jwtService;
+
     @Override
     public String registerUser(User user) {
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
@@ -44,8 +47,10 @@ public class UserServiceImpl implements UserService{
                 authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),loginRequest.getPassword()));
 
         if(authentication.isAuthenticated())
-            return "Success";
+            return jwtService.generateToken(loginRequest.getUsername());
 
         return "failure";
     }
+
+
 }
