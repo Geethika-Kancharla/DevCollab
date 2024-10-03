@@ -13,7 +13,7 @@ const withAuth = <P extends object>(WrappedComponent: ComponentType<P>) => {
             const token = localStorage.getItem('token');
 
             if (!token) {
-                // If token is not found, redirect to login page
+              
                 router.push('/login');
             } else {
                 setIsAuthenticated(true);
@@ -27,10 +27,9 @@ const withAuth = <P extends object>(WrappedComponent: ComponentType<P>) => {
         }
 
         if (!isAuthenticated) {
-            return null; // Or you can return a loading indicator while redirecting
+            return null;
         }
 
-        // If authenticated, render the wrapped component
         return <WrappedComponent {...props} />;
     };
 
