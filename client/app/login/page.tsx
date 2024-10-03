@@ -1,59 +1,63 @@
-import { useState } from 'react';
+'use client';
 
-const LoginForm = () => {
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
+
+const LoginPage: React.FC = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const [error, setError] = useState<string | null>(null);
+    const router = useRouter();
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        
-        console.log({ email, password });
+        try {
+            const response = await axios.post('http://localhost:8080/api/auth/login', {
+                email,
+                password,
+            });
+
+            // Assuming the JWT token is in response.data.token
+            const token = response.data.token;
+
+            // Store the token in localStorage
+            localStorage.setItem('token', token);
+
+            // Redirect to the home page
+            router.push('/home');
+        } catch (error) {
+            setError('Login failed. Please check your credentials.');
+        }
     };
 
     return (
-        <div className="flex items-center justify-center h-screen bg-gray-100">
-            <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md max-w-sm w-full">
-                <h1 className="text-2xl font-bold text-center mb-6">Login</h1>
-
-                <div className="mb-4">
-                    <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
-                        Email
-                    </label>
+        <div className="login-container">
+            <h1>Login</h1>
+            <form onSubmit={handleLogin}>
+                <div>
+                    <label>Email:</label>
                     <input
                         type="email"
-                        id="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-500"
                     />
                 </div>
-
-                <div className="mb-6">
-                    <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">
-                        Password
-                    </label>
+                <div>
+                    <label>Password:</label>
                     <input
                         type="password"
-                        id="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-500"
                     />
                 </div>
-
-                <div className="flex items-center justify-between">
-                    <button
-                        type="submit"
-                        className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring"
-                    >
-                        Log In
-                    </button>
-                </div>
+                {error && <p style={{ color: 'red' }}>{error}</p>}
+                <button type="submit">Login</button>
             </form>
         </div>
     );
 };
 
-export default LoginForm;
+export default LoginPage;
