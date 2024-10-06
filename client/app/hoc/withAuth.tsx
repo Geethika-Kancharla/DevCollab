@@ -1,4 +1,4 @@
-import { useRouter } from 'next/navigation'; // For routing in the `app` directory
+import { useRouter } from 'next/navigation';
 import { useEffect, useState, ComponentType } from 'react';
 
 type WithAuthProps = {};
@@ -13,8 +13,7 @@ const withAuth = <P extends object>(WrappedComponent: ComponentType<P>) => {
             const token = localStorage.getItem('token');
 
             if (!token) {
-              
-                router.push('/login');
+                router.push('/');
             } else {
                 setIsAuthenticated(true);
             }

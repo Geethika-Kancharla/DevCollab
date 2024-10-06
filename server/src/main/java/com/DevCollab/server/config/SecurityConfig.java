@@ -26,12 +26,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
       return http
+
                 .csrf(Customizer -> Customizer.disable()) // Disable CSRF protection for simplicity
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/register").permitAll() // Allow login and register for unauthenticated users
                         .anyRequest().authenticated() // All other routes need authentication
                 )
-                .httpBasic(Customizer.withDefaults())
+
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
               .addFilterBefore(jwtFilter , UsernamePasswordAuthenticationFilter.class)
