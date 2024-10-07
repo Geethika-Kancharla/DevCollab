@@ -14,7 +14,7 @@ export default function Home() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null); // Clear previous errors
+    setError(null);
     try {
       const response = await axios.post(
         'http://localhost:8080/login',

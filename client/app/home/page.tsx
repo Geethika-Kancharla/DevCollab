@@ -1,22 +1,19 @@
 "use client"
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/router';
-
+import { useRouter } from 'next/navigation';
 
 const HomePage: React.FC = () => {
 
     const router = useRouter();
 
     useEffect(() => {
-      const token = localStorage.getItem('token');
-  
-      // If no token, redirect to login page
-      if (!token) {
-        router.push('/login');
-      }
-  
-      // Optionally, verify token or fetch user-specific data here
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            router.push('/');
+        }
+
     }, []);
 
     return (
