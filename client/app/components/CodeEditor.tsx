@@ -5,6 +5,7 @@ import Editor from '@monaco-editor/react';
 import LanguageSelector from './LanguageSelector';
 import { CODE_SNIPPETS } from './Constants';
 import { HStack, Box } from '@chakra-ui/react';
+import Output from './Output';
 
 const CodeEditor: React.FC = () => {
     const editorRef = useRef();
@@ -36,6 +37,7 @@ const CodeEditor: React.FC = () => {
                         onChange={(value) => setCode(value || "")}
                     />
                 </Box>
+                <Output editorRef={editorRef} language={language} />
             </HStack>
 
         </div>
