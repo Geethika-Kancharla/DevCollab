@@ -29,18 +29,28 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ language, onSelect 
     const languages = Object.entries(LanguageOptions)
 
     return (
-        <Box>
+        <Box mb={4} ml={4}>
             <Text mb={2} fontSize='lg'>Language</Text>
-            <Menu>
+            <Menu isLazy>
                 <MenuButton as={Button} rightIcon={<FaChevronDown />}>
                     {language}
                 </MenuButton>
-                <MenuList >
+                <MenuList bg='#110c1b'>
                     {
-                        languages.map(([language, version]) => (
-                            <MenuItem key={language}
-                                onClick={() => onSelect(language)}>
-                                {language}
+                        languages.map(([lang, version]) => (
+                            <MenuItem key={lang}
+                                color={
+                                    lang === language ? "blue.400" : "white"
+                                }
+                                bg={
+                                    lang === language ? "gray.400" : ""
+                                }
+                                _hover={{
+                                    bg: "gray.900",
+                                    color: "blue.400"
+                                }}
+                                onClick={() => onSelect(lang)}>
+                                {lang}
                                 &nbsp;
                                 <Text as='span' fontSize='sm' color='gray.600'>
                                     {version}
@@ -50,7 +60,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ language, onSelect 
                     }
                 </MenuList>
             </Menu>
-        </Box>
+        </Box >
     )
 
 }
