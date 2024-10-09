@@ -20,16 +20,10 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ language, onSelect 
     const LanguageOptions = {
 
         javascript: "18.15.0",
-        typescript: "5.0.3",
         python: "3.11.1",
         java: "17.0.1",
-        csharp: "10.0.0",
-        cplusplus: "17.0.1",
         c: "17.0.1",
-        go: "1.21.3",
-        ruby: "3.1.2",
-        php: "8.3.0",
-        swift: "5.9.1",
+
     }
 
     const languages = Object.entries(LanguageOptions)

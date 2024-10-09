@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react'
 import Editor from '@monaco-editor/react';
 import LanguageSelector from './LanguageSelector';
+import { CODE_SNIPPETS } from './Constants';
 
 const CodeEditor: React.FC = () => {
     const editorRef = useRef();
@@ -17,6 +18,7 @@ const CodeEditor: React.FC = () => {
 
     const onSelect = (language: string) => {
         setLanguage(language)
+        setCode(CODE_SNIPPETS[language as keyof typeof CODE_SNIPPETS])
     }
 
     return (
@@ -28,7 +30,7 @@ const CodeEditor: React.FC = () => {
                 language={language}
                 onMount={onMount}
                 value={code}
-                onChange={() => setCode(code)}
+                onChange={(value) => setCode(value || "")}
             />
         </div>
     )
