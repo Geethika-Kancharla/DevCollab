@@ -33,7 +33,7 @@ export default function Home() {
       // Assuming the token is sent in the response data
       const token = response.data.token;
       localStorage.setItem('token', token);
-      router.push("/");
+      router.push("/home");
       console.log("Login successfull");
 
       // // Redirect to home page after successful login

@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import CodeEditor from '../components/CodeEditor';
 
 const HomePage: React.FC = () => {
 
@@ -17,9 +18,8 @@ const HomePage: React.FC = () => {
     }, []);
 
     return (
-        <div>
-            <h1>Welcome to the Home Page</h1>
-
+        <div className="min-h-lvh bg-gray-500 px-6 py-8">
+            <CodeEditor />
         </div>
     );
 };
