@@ -7,7 +7,8 @@ import axios from 'axios'
 
 const Output: React.FC<{ editorRef: React.RefObject<any>, language: string }> = ({ editorRef, language }) => {
 
-    const [output, setOutput] = useState(null);
+    const [output, setOutput] = useState<string[] | null>(null);
+    const [isError, setIsError] = useState(false)
 
     const runCode = async () => {
         const sourceCode = editorRef.current.getValue();
@@ -19,15 +20,15 @@ const Output: React.FC<{ editorRef: React.RefObject<any>, language: string }> = 
         }
         try {
             const { run: result } = await executeCode(language, sourceCode);
-            setOutput(result.output)
+            setOutput(result.output.split("\n"))
+            result.stderr ? setIsError(true) : setIsError(false);
 
         } catch (error) {
             console.error(error);
+            setIsError(true);
         }
 
     }
-
-
 
     return (
         <Box w="50%">
@@ -45,10 +46,19 @@ const Output: React.FC<{ editorRef: React.RefObject<any>, language: string }> = 
                 height='75vh'
                 p={2}
                 border='1px solid'
-                borderColor='#333'
+                color={
+                    isError ? "red.300" : "#333"
+                }
+                borderColor={
+                    isError ? "red.500" : "#333"
+                }
                 borderRadius={4}
             >
-                {output ? output : 'Click "Run Code" to see the output here'}
+                {output ?
+                    output.map(
+                        (line: string, i: number) => <Text key={i}>{line}</Text>
+                    )
+                    : 'Click "Run Code" to see the output here'}
 
             </Box>
 

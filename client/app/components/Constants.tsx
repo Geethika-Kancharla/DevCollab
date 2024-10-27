@@ -5,7 +5,6 @@ const API = axios.create({
 })
 
 
-
 export const CODE_SNIPPETS = {
     javascript: "function greet() {\n\tconsole.log('Hello, World!');\n}\n\ngreet();\n",
     python: 'print("Hello, World!")',
