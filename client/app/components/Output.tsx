@@ -1,26 +1,39 @@
+"use client"
+
 import { Box, Text, Button } from '@chakra-ui/react';
+import { executeCode } from '../api/execute/route';
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 
 const Output: React.FC<{ editorRef: React.RefObject<any>, language: string }> = ({ editorRef, language }) => {
 
+    const [output, setOutput] = useState(null);
+
     const runCode = async () => {
         const sourceCode = editorRef.current.getValue();
+        console.log(sourceCode);
+        console.log(language);
+
         if (!sourceCode) {
             return;
         }
+        try {
+            const { run: result } = await executeCode(language, sourceCode);
+            setOutput(result.output)
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/run`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
+        } catch (error) {
+            console.error(error);
+        }
+
     }
+
 
 
     return (
         <Box w="50%">
-            <Text mb={2} fontSize="lg" fontWeight="bold">Output</Text>
+            <Text mb={2} fontSize="lg" fontWeight="bold" className='text-blue-800'>Output</Text>
             <Button
+                onClick={runCode}
                 variant="outline"
                 colorScheme="green"
                 size="sm"
@@ -35,7 +48,7 @@ const Output: React.FC<{ editorRef: React.RefObject<any>, language: string }> = 
                 borderColor='#333'
                 borderRadius={4}
             >
-                test
+                {output ? output : 'Click "Run Code" to see the output here'}
 
             </Box>
 

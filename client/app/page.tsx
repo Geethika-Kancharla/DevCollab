@@ -30,23 +30,19 @@ export default function Home() {
         }
       );
 
-      // Assuming the token is sent in the response data
       const token = response.data.token;
       localStorage.setItem('token', token);
       router.push("/home");
       console.log("Login successfull");
 
-      // // Redirect to home page after successful login
-      // router.push('/home');
-
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        // Check if the error response exists
+
         if (error.response) {
-          // Server responded with a status other than 200 range
+
           setError(`Error ${error.response.status}: ${error.response.data || 'Login failed. Please try again later.'}`);
         } else {
-          // The request was made but no response was received
+
           setError('Network error: Please check your connection and try again.');
         }
       } else {
@@ -65,7 +61,7 @@ export default function Home() {
         <label>Password:</label>
         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
       </div>
-      {error && <p className="error">{error}</p>} {/* Display the error message */}
+      {error && <p className="error">{error}</p>}
       <button type="submit">Login</button>
     </form>
   );

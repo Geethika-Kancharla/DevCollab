@@ -7,6 +7,7 @@ import {
     Button
 } from '@chakra-ui/react'
 import { FaChevronDown } from 'react-icons/fa'
+import { LanguageOptions } from "./Constants";
 
 interface LanguageSelectorProps {
     language: string;
@@ -16,21 +17,11 @@ interface LanguageSelectorProps {
 
 const LanguageSelector: React.FC<LanguageSelectorProps> = ({ language, onSelect }) => {
 
-
-    const LanguageOptions = {
-
-        javascript: "18.15.0",
-        python: "3.11.1",
-        java: "17.0.1",
-        c: "17.0.1",
-
-    }
-
     const languages = Object.entries(LanguageOptions)
 
     return (
         <Box mb={4} ml={4}>
-            <Text mb={2} fontSize='lg'>Language</Text>
+            <Text mb={2} fontSize='lg' className="text-blue-800">Language</Text>
             <Menu isLazy>
                 <MenuButton as={Button} rightIcon={<FaChevronDown />}>
                     {language}
