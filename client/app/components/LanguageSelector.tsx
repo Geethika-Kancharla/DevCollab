@@ -21,7 +21,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ language, onSelect 
 
     return (
         <Box mb={4} ml={4}>
-            <Text mb={2} fontSize='lg' className="text-blue-800">Language</Text>
+            <h1 className="text-[#007ACC] mb-2 font-bold text-lg">Language</h1>
             <Menu isLazy>
                 <MenuButton as={Button} rightIcon={<FaChevronDown />}>
                     {language}

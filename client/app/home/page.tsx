@@ -42,7 +42,6 @@ const HomePage: React.FC = () => {
     return (
         <div className="min-h-lvh bg-black px-6 py-8">
             <CodeEditor />
-
         </div>
     );
 };

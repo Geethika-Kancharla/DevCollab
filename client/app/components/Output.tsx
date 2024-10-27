@@ -31,26 +31,23 @@ const Output: React.FC<{ editorRef: React.RefObject<any>, language: string }> = 
     }
 
     return (
-        <Box w="50%">
-            <Text mb={2} fontSize="lg" fontWeight="bold" className='text-blue-800'>Output</Text>
-            <Button
+        <Box w={{ base: '100%', md: '50%' }} className='mt-1'>
+            <Text mb={2} fontSize={{ base: 'md', md: 'lg' }} fontWeight="bold" className='text-[#007ACC]'>Output</Text>
+            <button
                 onClick={runCode}
-                variant="outline"
-                colorScheme="green"
-                size="sm"
-                mb={4}
+                className='bg-black text-white font-bold hover:bg-slate-100 border border-white rounded-lg hover:text-black mb-2 p-2'
             >
                 Run Code
-            </Button>
+            </button>
             <Box
-                height='75vh'
+                height={{ base: '50vh', md: '75vh' }}
                 p={2}
                 border='1px solid'
                 color={
-                    isError ? "red.300" : "#333"
+                    isError ? "red.300" : "#6A6A6A"
                 }
                 borderColor={
-                    isError ? "red.500" : "#333"
+                    isError ? "red.500" : "#6A6A6A"
                 }
                 borderRadius={4}
             >
@@ -62,7 +59,7 @@ const Output: React.FC<{ editorRef: React.RefObject<any>, language: string }> = 
 
             </Box>
 
-        </Box>
+        </Box >
     )
 }
 

@@ -27,10 +27,10 @@ const CodeEditor: React.FC = () => {
 
     return (
         <div>
-            <HStack spacing={4}>
-                <Box w="50%">
+            <HStack spacing={4} display={{ base: 'block', md: 'flex' }} flexDirection={{ base: 'column', md: 'row' }}>
+                <Box w={{ base: '100%', md: '50%' }} mb={{ base: 4, md: 0 }}>
                     <LanguageSelector language={language} onSelect={onSelect} />
-                    <Editor height="75vh"
+                    <Editor height={window.innerWidth < 768 ? '50vh' : '75vh'}
                         theme='vs-dark'
                         defaultValue={CODE_SNIPPETS["javascript"]}
                         language={language}
