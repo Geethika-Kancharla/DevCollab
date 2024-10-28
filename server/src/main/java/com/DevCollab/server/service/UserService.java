@@ -14,5 +14,5 @@ public interface UserService {
 
     User getUserById(String userId);
 
-    User updateCode(String userId, String newCode);
+    User updateCode(String userId, String newCode,String newLanguage);
 }

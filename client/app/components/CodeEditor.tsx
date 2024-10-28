@@ -1,26 +1,49 @@
 "use client"
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Editor from '@monaco-editor/react';
 import LanguageSelector from './LanguageSelector';
 import { CODE_SNIPPETS } from './Constants';
 import { HStack, Box } from '@chakra-ui/react';
 import Output from './Output';
+import { useWebSocket } from '../hooks/useWebSocket';
 
-const CodeEditor: React.FC = () => {
-    const editorRef = useRef();
+interface CodeEditorProps {
+    userId: string;
+}
 
-    const onMount = (editor: any) => {
-        editorRef.current = editor;
-        editor.focus();
-    }
+const CodeEditor: React.FC<CodeEditorProps> = ({ userId }) => {
+    const editorRef = useRef<any>();
 
-    const [code, setCode] = useState(CODE_SNIPPETS["javascript"]);
-    const [language, setLanguage] = useState("javascript");
+
+    const [code, setCode] = useState<string>(CODE_SNIPPETS["javascript"]);
+    const [language, setLanguage] = useState<string>("javascript");
+    const { sendMessage, connected } = useWebSocket((updatedUser) => {
+
+        if (updatedUser.userId !== userId) {
+            setCode(updatedUser.code);
+            setLanguage(updatedUser.language);
+        }
+    });
+
+    useEffect(() => {
+        const fetchCode = async () => {
+            const response = await fetch(`http://localhost:8080/code/${userId}`);
+            const data = await response.json();
+            setCode(data.code);
+        };
+        fetchCode();
+    }, [userId]);
+
 
     const onSelect = (language: string) => {
         setLanguage(language)
         setCode(CODE_SNIPPETS[language as keyof typeof CODE_SNIPPETS])
+    }
+
+    const onMount = (editor: any) => {
+        editorRef.current = editor;
+        editor.focus();
     }
 
     return (

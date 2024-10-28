@@ -16,7 +16,7 @@ public class CodeController {
 
     @GetMapping("/{userId}")
     public User getCode(@PathVariable String userId) {
-        return userRepository.findById(userId).orElse(new User(userId, "", "", "", ""));
+        return userRepository.findById(userId).orElse(new User(userId, "", "", "", "",""));
     }
 
     @MessageMapping("/code/update")
@@ -24,6 +24,7 @@ public class CodeController {
     public CodeMessage sendCodeUpdate(CodeMessage message) {
         User user = userRepository.findById(message.getUserId()).orElse(new User());
         user.setCode(message.getCode());
+        user.setLanguage(message.getLanguage());
         userRepository.save(user);
         return message;
     }

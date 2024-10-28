@@ -58,10 +58,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User updateCode(String userId, String newCode) {
+    public User updateCode(String userId, String newCode,String newlanguage) {
         User user = getUserById(userId);
         if (user != null) {
             user.setCode(newCode);
+            user.setLanguage(newlanguage);
             return userRepository.save(user);
         }
         return null;
