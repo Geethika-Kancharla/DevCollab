@@ -11,4 +11,8 @@ public interface UserService {
     String registerUser(User user);
 
     String verify(LoginRequest loginRequest);
+
+    User getUserById(String userId);
+
+    User updateCode(String userId, String newCode);
 }

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import Editor from '@monaco-editor/react';
 import LanguageSelector from './LanguageSelector';
 import { CODE_SNIPPETS } from './Constants';
@@ -22,8 +22,6 @@ const CodeEditor: React.FC = () => {
         setLanguage(language)
         setCode(CODE_SNIPPETS[language as keyof typeof CODE_SNIPPETS])
     }
-
-
 
     return (
         <div>

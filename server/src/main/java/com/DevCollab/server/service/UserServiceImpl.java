@@ -52,5 +52,20 @@ public class UserServiceImpl implements UserService{
         return "failure";
     }
 
+    @Override
+    public User getUserById(String userId) {
+        return null;
+    }
+
+    @Override
+    public User updateCode(String userId, String newCode) {
+        User user = getUserById(userId);
+        if (user != null) {
+            user.setCode(newCode);
+            return userRepository.save(user);
+        }
+        return null;
+    }
+
 
 }
