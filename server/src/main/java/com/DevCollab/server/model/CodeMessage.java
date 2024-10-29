@@ -14,7 +14,4 @@ public class CodeMessage {
 
     private String language;
 
-
-
-
 }

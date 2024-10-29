@@ -1,31 +1,16 @@
 package com.DevCollab.server.controller;
 
 import com.DevCollab.server.model.CodeMessage;
-import com.DevCollab.server.model.User;
-import com.DevCollab.server.repo.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.stereotype.Controller;
 
+@Controller
 public class CodeController {
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @GetMapping("/{userId}")
-    public User getCode(@PathVariable String userId) {
-        return userRepository.findById(userId).orElse(new User(userId, "", "", "", "",""));
-    }
-
-    @MessageMapping("/code/update")
+    @MessageMapping("/code.update")
     @SendTo("/topic/code")
     public CodeMessage sendCodeUpdate(CodeMessage message) {
-        User user = userRepository.findById(message.getUserId()).orElse(new User());
-        user.setCode(message.getCode());
-        user.setLanguage(message.getLanguage());
-        userRepository.save(user);
         return message;
     }
 }

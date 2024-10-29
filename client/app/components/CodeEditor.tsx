@@ -6,34 +6,15 @@ import LanguageSelector from './LanguageSelector';
 import { CODE_SNIPPETS } from './Constants';
 import { HStack, Box } from '@chakra-ui/react';
 import Output from './Output';
-import { useWebSocket } from '../hooks/useWebSocket';
 
-interface CodeEditorProps {
-    userId: string;
-}
 
-const CodeEditor: React.FC<CodeEditorProps> = ({ userId }) => {
+const CodeEditor: React.FC = () => {
     const editorRef = useRef<any>();
 
 
     const [code, setCode] = useState<string>(CODE_SNIPPETS["javascript"]);
     const [language, setLanguage] = useState<string>("javascript");
-    const { sendMessage, connected } = useWebSocket((updatedUser) => {
 
-        if (updatedUser.userId !== userId) {
-            setCode(updatedUser.code);
-            setLanguage(updatedUser.language);
-        }
-    });
-
-    useEffect(() => {
-        const fetchCode = async () => {
-            const response = await fetch(`http://localhost:8080/code/${userId}`);
-            const data = await response.json();
-            setCode(data.code);
-        };
-        fetchCode();
-    }, [userId]);
 
 
     const onSelect = (language: string) => {

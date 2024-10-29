@@ -32,7 +32,9 @@ export default function Home() {
 
       const token = response.data.token;
       localStorage.setItem('token', token);
-      router.push("/home");
+      setTimeout(() => {
+        router.push("/home");
+      }, 100);
       console.log("Login successfull");
 
     } catch (error) {

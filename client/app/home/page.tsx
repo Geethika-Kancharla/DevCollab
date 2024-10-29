@@ -1,15 +1,18 @@
-"use client"
+"use client";
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import CodeEditor from '../components/CodeEditor';
-import axios from 'axios'
-import { fetchLanguagesAndVersions } from '../components/Constants';
+import { jwtDecode } from 'jwt-decode';
 
+interface DecodedToken {
+    userId: string;
+
+}
 
 const HomePage: React.FC = () => {
-
     const router = useRouter();
+    const [userId, setUserId] = useState<string | null>(null);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -17,26 +20,21 @@ const HomePage: React.FC = () => {
         if (!token) {
             router.push('/');
         }
-
-    }, []);
-
-    const API = axios.create({
-        baseURL: "https://emkc.org/api/v2/piston"
-    })
-
-
-
-    useEffect(() => {
-        const initialize = async () => {
-            try {
-                await fetchLanguagesAndVersions();
-            } catch (error) {
-                console.error("Failed to fetch languages and versions:", error);
+        else {
+            if (token) {
+                try {
+                    const decoded = jwtDecode<DecodedToken>(token);
+                    setUserId(decoded.userId);
+                    console.log(userId);
+                    // router.push("/home");
+                } catch (error) {
+                    console.error("Error decoding JWT:", error);
+                }
             }
-        };
 
-        initialize();
+        }
     }, []);
+
 
 
     return (
