@@ -1,9 +1,12 @@
 package com.DevCollab.server.service;
 
+import com.DevCollab.server.model.JWTResponse;
 import com.DevCollab.server.model.LoginRequest;
 import com.DevCollab.server.model.User;
 import com.DevCollab.server.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -41,32 +44,27 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public String verify(LoginRequest loginRequest) {
+    public ResponseEntity<?> verify(LoginRequest loginRequest) {
+        Authentication authentication = authManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
+        );
 
-        Authentication authentication=authManager.
-                authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),loginRequest.getPassword()));
-
-        if(authentication.isAuthenticated())
-            return jwtService.generateToken(loginRequest.getUsername());
-
-        return "failure";
-    }
-
-    @Override
-    public User getUserById(String userId) {
-        return null;
-    }
-
-    @Override
-    public User updateCode(String userId, String newCode,String newlanguage) {
-        User user = getUserById(userId);
-        if (user != null) {
-            user.setCode(newCode);
-            user.setLanguage(newlanguage);
-            return userRepository.save(user);
+        if (authentication.isAuthenticated()) {
+            String token = jwtService.generateToken(loginRequest.getUsername());
+            // Create a response object to send back
+            return ResponseEntity.ok(new JWTResponse(token)); // Assuming JwtResponse is a class you created for the token
         }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password"); // Change the response type here
+    }
+
+    @Override
+    public String getId() {
+
         return null;
     }
+
+
 
 
 }

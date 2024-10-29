@@ -4,6 +4,7 @@ import com.DevCollab.server.model.LoginRequest;
 import com.DevCollab.server.model.User;
 import com.DevCollab.server.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,7 +27,7 @@ public class UserController {
 
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
      return userService.verify(loginRequest);
     }
 

@@ -24,24 +24,24 @@ export const LanguageOptions = {
 
 // let LanguageOptions: { [key: string]: string } = {};
 
-export const fetchLanguagesAndVersions = async () => {
-    try {
-        const response = await API.get("/runtimes");
-        const data = response.data;
+// export const fetchLanguagesAndVersions = async () => {
+//     try {
+//         const response = await API.get("/runtimes");
+//         const data = response.data;
 
 
-        const LanguageOptions = data.reduce((acc: any, runtime: any) => {
-            acc[runtime.language] = runtime.version;
-            return acc;
-        }, {});
+//         const LanguageOptions = data.reduce((acc: any, runtime: any) => {
+//             acc[runtime.language] = runtime.version;
+//             return acc;
+//         }, {});
 
-        console.log("LanguageOptions populated:", LanguageOptions);
-    } catch (error: any) {
-        console.error(error.message);
-        throw error;
-    }
-};
+//         console.log("LanguageOptions populated:", LanguageOptions);
+//     } catch (error: any) {
+//         console.error(error.message);
+//         throw error;
+//     }
+// };
 
-// export { LanguageOptions }
+// // export { LanguageOptions }
 
-console.log(LanguageOptions)
+// console.log(LanguageOptions)

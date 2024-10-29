@@ -2,14 +2,12 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-
 import axios from 'axios';
 
 export default function Home() {
   const [username, setUserName] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
-
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -30,21 +28,23 @@ export default function Home() {
         }
       );
 
+      console.log("Login response:", response.data); // Log the response
       const token = response.data.token;
-      localStorage.setItem('token', token);
-      setTimeout(() => {
+      console.log("Token from response:", token); // Log the token
+
+      if (token) {
+        localStorage.setItem('token', token);
+        console.log("Token stored in localStorage:", localStorage.getItem('token'));
         router.push("/home");
-      }, 100);
-      console.log("Login successfull");
+      } else {
+        setError('No token received from server.');
+      }
 
     } catch (error) {
       if (axios.isAxiosError(error)) {
-
         if (error.response) {
-
           setError(`Error ${error.response.status}: ${error.response.data || 'Login failed. Please try again later.'}`);
         } else {
-
           setError('Network error: Please check your connection and try again.');
         }
       } else {
