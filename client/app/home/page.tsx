@@ -6,7 +6,7 @@ import CodeEditor from '../components/CodeEditor';
 import { jwtDecode } from 'jwt-decode'; // Ensure you are using the correct import for jwt-decode
 
 interface DecodedToken {
-    id: string; 
+    id: string;
 }
 
 const HomePage: React.FC = () => {
