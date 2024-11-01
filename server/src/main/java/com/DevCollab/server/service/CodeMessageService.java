@@ -14,7 +14,7 @@ public class CodeMessageService {
     private CodeMessageRepository codeMessageRepository;
 
     public CodeMessage saveCode(CodeMessage codeMessage) {
-        Optional<CodeMessage> existingCode = codeMessageRepository.findByUserName(codeMessage.getUsername());
+        Optional<CodeMessage> existingCode = codeMessageRepository.findByUsername(codeMessage.getUsername());
         if (existingCode.isPresent()) {
             CodeMessage codeToUpdate = existingCode.get();
             codeToUpdate.setCode(codeMessage.getCode());
@@ -26,7 +26,7 @@ public class CodeMessageService {
     }
 
     public Optional<CodeMessage> getCodeByUserName(String username) {
-        return codeMessageRepository.findByUserName(username);
+        return codeMessageRepository.findByUsername(username);
     }
 
 }

@@ -28,9 +28,9 @@ export default function Home() {
         }
       );
 
-      console.log("Login response:", response.data); 
+      console.log("Login response:", response.data);
       const token = response.data.token;
-      console.log("Token from response:", token); 
+      console.log("Token from response:", token);
 
       if (token) {
         localStorage.setItem('token', token);

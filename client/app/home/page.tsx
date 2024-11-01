@@ -6,7 +6,7 @@ import CodeEditor from '../components/CodeEditor';
 import { jwtDecode } from 'jwt-decode';
 
 interface DecodedToken {
-    username: string;
+    sub: string;
     exp: number;
 }
 
@@ -21,19 +21,20 @@ const HomePage: React.FC = () => {
         } else {
             try {
                 const decoded = jwtDecode<DecodedToken>(token);
-                setUsername(decoded.username);
+                setUsername(decoded.sub);
+                console.error("Username is:", username);
 
-                // Redirect to login if token is expired
-                if (decoded.exp * 1000 < Date.now()) {
-                    localStorage.removeItem('token');
-                    router.push('/');
-                }
+                // // Redirect to login if token is expired
+                // if (decoded.exp * 1000 < Date.now()) {
+                //     localStorage.removeItem('token');
+                //     router.push('/');
+                // }
             } catch (error) {
                 console.error("Error decoding JWT:", error);
                 router.push('/');
             }
         }
-    }, [router]);
+    }, [router, username]);
 
     return (
         <div className="min-h-lvh bg-black px-6 py-8">

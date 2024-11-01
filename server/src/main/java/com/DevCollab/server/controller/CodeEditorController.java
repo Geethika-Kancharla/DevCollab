@@ -16,8 +16,8 @@ public class CodeEditorController {
     @Autowired
     private CodeMessageService codeMessageService;
 
-    @MessageMapping("/editor/{userName}")
-    @SendTo("/topic/{userName}")
+    @MessageMapping("/editor/{username}")
+    @SendTo("/topic/{username}")
     public CodeMessage updateCode(@DestinationVariable String username, CodeMessage codeMessage) {
 
         codeMessage.setUsername(username);
