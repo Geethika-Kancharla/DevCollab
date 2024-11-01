@@ -15,7 +15,7 @@ interface CodeEditorProps {
 
 const CodeEditor: React.FC<CodeEditorProps> = ({ username }) => {
     const editorRef = useRef<any>();
-    const clientRef = useRef<Client | null>(null);  // Use ref to store the client
+    const clientRef = useRef<Client | null>(null);  // WebSocket client ref
     const [code, setCode] = useState<string>(CODE_SNIPPETS["javascript"]);
     const [language, setLanguage] = useState<string>("javascript");
 
@@ -26,10 +26,16 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ username }) => {
             onConnect: () => {
                 console.log('Connected to WebSocket server.');
 
+                // Fetch the latest code from the server upon connecting
+                client.publish({
+                    destination: `/app/getLatestCode/${username}`,
+                });
+
+                // Subscribe to code updates for this username
                 client.subscribe(`/topic/${username}`, (message) => {
                     const data = JSON.parse(message.body);
-                    if (data.username !== username && data.language === language) {
-                        setCode(data.code);
+                    if (data.language === language) {
+                        setCode(data.code);  // Update code with the latest from server
                     }
                 });
             },
@@ -39,27 +45,31 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ username }) => {
         });
 
         client.activate();
-        clientRef.current = client;  // Store the client in ref
+        clientRef.current = client;
 
         return () => {
-            client.deactivate();
+            client.deactivate();  // Cleanup on unmount
         };
     }, [username, language]);
 
+    // Handle code changes and publish updates to WebSocket
     const handleCodeChange = (newCode: string) => {
         setCode(newCode);
-        // Access client via ref
         if (clientRef.current) {
             clientRef.current.publish({
                 destination: `/app/editor/${username}`,
-                body: JSON.stringify({ username, code: newCode, language }),
+                body: JSON.stringify({
+                    username,
+                    code: newCode,
+                    language,
+                }),
             });
         }
     };
 
-    const onSelect = (language: string) => {
-        setLanguage(language);
-        setCode(CODE_SNIPPETS[language as keyof typeof CODE_SNIPPETS]);
+    const onSelect = (newLanguage: string) => {
+        setLanguage(newLanguage);
+        setCode(CODE_SNIPPETS[newLanguage as keyof typeof CODE_SNIPPETS]);
     };
 
     const onMount = (editor: any) => {

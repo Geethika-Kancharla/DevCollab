@@ -16,14 +16,16 @@ public class CodeEditorController {
     @Autowired
     private CodeMessageService codeMessageService;
 
-    @MessageMapping("/editor/{username}")
+    @MessageMapping("/getLatestCode/{username}")
     @SendTo("/topic/{username}")
-    public CodeMessage updateCode(@DestinationVariable String username, CodeMessage codeMessage) {
+    public CodeMessage getLatestCode(@DestinationVariable String username) {
+        // Return the latest code for the user
+        return codeMessageService.getLatestCode(username);
+    }
 
-        codeMessage.setUsername(username);
-        CodeMessage updatedCodeMessage = codeMessageService.saveCode(codeMessage);
-
-
-        return updatedCodeMessage;
+    @MessageMapping("/editor/{username}")
+    public void handleCodeUpdate(@DestinationVariable String username, CodeMessage updatedCodeMessage) {
+        // Update the user's code in the database
+        codeMessageService.saveOrUpdateCode(username, updatedCodeMessage.getCode(), updatedCodeMessage.getLanguage());
     }
 }

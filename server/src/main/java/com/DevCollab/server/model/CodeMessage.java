@@ -1,25 +1,25 @@
 package com.DevCollab.server.model;
 
-
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
+import java.time.LocalDateTime;
 
 @Document(collection = "codeMessages")
 public class CodeMessage {
     @Id
     private String id;               // Unique identifier for the document
-    private String username;
-    private String code;
-    private String language;
+    private String username;         // Unique username to identify the user
+    private String code;             // The current code snippet
+    private String language;         // Programming language of the code
+    private LocalDateTime lastUpdated; // Timestamp for the latest code update
 
-
-    public CodeMessage(String id, String username, String code, String language) {
+    public CodeMessage(String id, String username, String code, String language, LocalDateTime lastUpdated) {
         this.id = id;
         this.username = username;
         this.code = code;
         this.language = language;
+        this.lastUpdated = lastUpdated;
     }
 
     public CodeMessage() {
@@ -57,4 +57,11 @@ public class CodeMessage {
         this.language = language;
     }
 
+    public LocalDateTime getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(LocalDateTime lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
 }
