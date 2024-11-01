@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect } from 'react';
 import Editor from '@monaco-editor/react';
 import LanguageSelector from './LanguageSelector';
-import { CODE_SNIPPETS } from './Constants';
 import { HStack, Box } from '@chakra-ui/react';
 import Output from './Output';
 import { Client } from '@stomp/stompjs';
@@ -15,8 +14,8 @@ interface CodeEditorProps {
 
 const CodeEditor: React.FC<CodeEditorProps> = ({ username }) => {
     const editorRef = useRef<any>();
-    const clientRef = useRef<Client | null>(null);  // WebSocket client ref
-    const [code, setCode] = useState<string>(CODE_SNIPPETS["javascript"]);
+    const clientRef = useRef<Client | null>(null);
+    const [code, setCode] = useState<string>("//Write your code here");
     const [language, setLanguage] = useState<string>("javascript");
 
     useEffect(() => {
@@ -26,16 +25,16 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ username }) => {
             onConnect: () => {
                 console.log('Connected to WebSocket server.');
 
-                // Fetch the latest code from the server upon connecting
+
                 client.publish({
                     destination: `/app/getLatestCode/${username}`,
                 });
 
-                // Subscribe to code updates for this username
+
                 client.subscribe(`/topic/${username}`, (message) => {
                     const data = JSON.parse(message.body);
                     if (data.language === language) {
-                        setCode(data.code);  // Update code with the latest from server
+                        setCode(data.code);
                     }
                 });
             },
@@ -48,11 +47,11 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ username }) => {
         clientRef.current = client;
 
         return () => {
-            client.deactivate();  // Cleanup on unmount
+            client.deactivate();
         };
     }, [username, language]);
 
-    // Handle code changes and publish updates to WebSocket
+
     const handleCodeChange = (newCode: string) => {
         setCode(newCode);
         if (clientRef.current) {
@@ -69,7 +68,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ username }) => {
 
     const onSelect = (newLanguage: string) => {
         setLanguage(newLanguage);
-        setCode(CODE_SNIPPETS[newLanguage as keyof typeof CODE_SNIPPETS]);
+        setCode(code);
     };
 
     const onMount = (editor: any) => {
@@ -85,7 +84,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ username }) => {
                     <Editor
                         height={window.innerWidth < 768 ? '50vh' : '75vh'}
                         theme='vs-dark'
-                        defaultValue={CODE_SNIPPETS["javascript"]}
+
                         language={language}
                         onMount={onMount}
                         value={code}
