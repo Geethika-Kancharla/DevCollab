@@ -49,7 +49,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ username }) => {
         return () => {
             client.deactivate();
         };
-    }, [username, language]);
+    }, [username, code]);
 
 
     const handleCodeChange = (newCode: string) => {
