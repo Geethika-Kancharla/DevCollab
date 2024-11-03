@@ -54,7 +54,8 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ username }) => {
 
     const handleCodeChange = (newCode: string) => {
         setCode(newCode);
-        if (clientRef.current) {
+
+        if (clientRef.current && clientRef.current.connected) {
             clientRef.current.publish({
                 destination: `/app/editor/${username}`,
                 body: JSON.stringify({
@@ -63,6 +64,8 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ username }) => {
                     language,
                 }),
             });
+        } else {
+            console.warn("STOMP client is not connected. Skipping publish.");
         }
     };
 
