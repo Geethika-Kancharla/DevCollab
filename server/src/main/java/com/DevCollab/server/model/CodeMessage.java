@@ -8,11 +8,11 @@ import java.time.LocalDateTime;
 @Document(collection = "codeMessages")
 public class CodeMessage {
     @Id
-    private String id;               // Unique identifier for the document
-    private String username;         // Unique username to identify the user
-    private String code;             // The current code snippet
-    private String language;         // Programming language of the code
-    private LocalDateTime lastUpdated; // Timestamp for the latest code update
+    private String id;
+    private String username;
+    private String code;
+    private String language;
+    private LocalDateTime lastUpdated;
 
     public CodeMessage(String id, String username, String code, String language, LocalDateTime lastUpdated) {
         this.id = id;
