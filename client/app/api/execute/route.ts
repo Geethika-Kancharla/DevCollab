@@ -1,37 +1,37 @@
-"use client"
-
-import axios from 'axios'
-import { LanguageOptions } from '@/app/components/Constants'
-import { useState } from 'react'
+import { NextResponse } from 'next/server';
+import axios from 'axios';
+import { LanguageOptions } from '@/app/components/Constants';
 
 const API = axios.create({
     baseURL: "https://emkc.org/api/v2/piston"
-})
+});
 
-
-export const executeCode = async (language: string, sourceCode: string) => {
-    const selectedLanguage = LanguageOptions[language as keyof typeof LanguageOptions];
-    console.log("Sending payload:", {
-        language,
-        version: selectedLanguage,
-        files: [{ content: sourceCode }]
-    });
-
+async function executeCode(language: string, sourceCode: string) {
     try {
+        const selectedLanguage = LanguageOptions[language as keyof typeof LanguageOptions];
         const response = await API.post("/execute", {
             language,
             version: selectedLanguage,
-            files: [
-                {
-                    content: sourceCode
-                }
-            ]
+            files: [{ content: sourceCode }]
         });
         return response.data;
-    } catch (error: any) {
-        console.error("Error executing code:", error.response?.data || error.message);
-        throw error;
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            console.error("Error executing code:", error.message);
+            throw error;
+        }
+        console.error("Unknown error executing code");
+        throw new Error("Unknown error occurred");
     }
 }
 
-
+export async function POST(request: Request) {
+    try {
+        const { language, sourceCode } = await request.json();
+        const result = await executeCode(language, sourceCode);
+        return NextResponse.json(result);
+    } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        return NextResponse.json({ error: errorMessage }, { status: 500 });
+    }
+}

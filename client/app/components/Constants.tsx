@@ -1,8 +1,8 @@
-import axios from 'axios'
+// import axios from 'axios'
 
-const API = axios.create({
-    baseURL: "https://emkc.org/api/v2/piston"
-})
+// const API = axios.create({
+//     baseURL: "https://emkc.org/api/v2/piston"
+// })
 
 
 export const LanguageOptions = {

@@ -3,22 +3,22 @@
 import { useState, useRef, useEffect } from 'react';
 import Editor from '@monaco-editor/react';
 import LanguageSelector from './LanguageSelector';
-import { HStack, Box, Input, Button, Text } from '@chakra-ui/react';
+import { HStack, Box } from '@chakra-ui/react';
 import Output from './Output';
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
+import { editor } from 'monaco-editor';
 
 interface CodeEditorProps {
     username: string;
 }
 
 const CodeEditor: React.FC<CodeEditorProps> = ({ username }) => {
-    const editorRef = useRef<any>();
+    const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
     const clientRef = useRef<Client | null>(null);
     const [code, setCode] = useState<string>("//Write your code here");
     const [language, setLanguage] = useState<string>("javascript");
-    const [roomId, setRoomId] = useState<string>("");
-    const [currentRoom, setCurrentRoom] = useState<string>("");
+    const isLocalUpdate = useRef(false);
 
     useEffect(() => {
         const socketUrl = 'http://localhost:8080/ws';
@@ -26,18 +26,23 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ username }) => {
             webSocketFactory: () => new SockJS(socketUrl),
             onConnect: () => {
                 console.log('Connected to WebSocket server.');
-                
-            
+
                 client.publish({
-                    destination: `/app/getLatestCode/${currentRoom || username}`,
+                    destination: `/app/getLatestCode/${username}`,
                 });
 
-                
-                client.subscribe(`/topic/${currentRoom || username}`, (message) => {
-                    const data = JSON.parse(message.body);
-                    if (data.sender !== username) { 
-                        setCode(data.code);
-                        if (data.language) setLanguage(data.language);
+                client.subscribe(`/topic/${username}`, (message) => {
+                    try {
+                        const data = JSON.parse(message.body);
+                        // Only update if it's not a local change
+                        if (!isLocalUpdate.current && data.code) {
+                            setCode(data.code);
+                            if (data.language) {
+                                setLanguage(data.language);
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error processing message:', error);
                     }
                 });
             },
@@ -54,65 +59,54 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ username }) => {
                 client.deactivate();
             }
         };
-    }, [username, currentRoom]); 
+    }, [username]);
 
     const handleCodeChange = (newCode: string | undefined) => {
         if (!newCode) return;
+        
+        isLocalUpdate.current = true;
         setCode(newCode);
 
         if (clientRef.current?.connected) {
             clientRef.current.publish({
-                destination: `/app/editor/${currentRoom || username}`,
+                destination: `/app/editor/${username}`,
                 body: JSON.stringify({
-                    sender: username,
+                    username,
                     code: newCode,
                     language,
                 }),
             });
         }
+        setTimeout(() => {
+            isLocalUpdate.current = false;
+        }, 100);
     };
 
-    const joinRoom = () => {
-        if (roomId) {
-            setCurrentRoom(roomId);
+    const onSelect = (newLanguage: string) => {
+        setLanguage(newLanguage);
+        if (clientRef.current?.connected) {
+            clientRef.current.publish({
+                destination: `/app/editor/${username}`,
+                body: JSON.stringify({
+                    username,
+                    code,
+                    language: newLanguage,
+                }),
+            });
         }
-    };
-
-    const createNewRoom = () => {
-        const newRoomId = Math.random().toString(36).substring(7);
-        setRoomId(newRoomId);
-        setCurrentRoom(newRoomId);
-    };
-
-    const leaveRoom = () => {
-        setCurrentRoom("");
-        setCode("//Write your code here");
     };
 
     return (
         <div>
-            <Box mb={4}>
-                <HStack spacing={4}>
-                    <Input 
-                        placeholder="Enter room ID"
-                        value={roomId}
-                        onChange={(e) => setRoomId(e.target.value)}
-                    />
-                    <Button onClick={joinRoom}>Join Room</Button>
-                    <Button onClick={createNewRoom}>Create New Room</Button>
-                    {currentRoom && <Button onClick={leaveRoom}>Leave Room</Button>}
-                </HStack>
-                {currentRoom && <Text mt={2}>Current Room: {currentRoom}</Text>}
-            </Box>
-
             <HStack spacing={4} display={{ base: 'block', md: 'flex' }} flexDirection={{ base: 'column', md: 'row' }}>
                 <Box w={{ base: '100%', md: '50%' }} mb={{ base: 4, md: 0 }}>
-                    <LanguageSelector language={language} onSelect={setLanguage} />
+                    <LanguageSelector language={language} onSelect={onSelect} />
                     <Editor
                         height={window.innerWidth < 768 ? '50vh' : '75vh'}
                         theme='vs-dark'
                         language={language}
                         value={code}
+                        defaultValue="//Write your code here"
                         onChange={handleCodeChange}
                         onMount={(editor) => {
                             editorRef.current = editor;
@@ -123,6 +117,13 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ username }) => {
                             fontSize: 14,
                             wordWrap: 'on',
                             automaticLayout: true,
+                            scrollBeyondLastLine: false,
+                            renderWhitespace: 'selection',
+                            renderControlCharacters: true,
+                            formatOnPaste: true,
+                            formatOnType: true,
+                            lineNumbers: 'on',
+                            tabSize: 2,
                         }}
                     />
                 </Box>
