@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import io.jsonwebtoken.Claims;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import java.security.Key;
 import java.util.function.Function;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;

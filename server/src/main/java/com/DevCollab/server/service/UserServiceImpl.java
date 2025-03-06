@@ -34,11 +34,10 @@ public class UserServiceImpl implements UserService{
             return "Username already exists!";
         }
 
-        // Encrypt the password
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole("USER");
 
-        // Save the user to MongoDB
+
         userRepository.save(user);
         return "User registered successfully!";
     }
@@ -51,11 +50,10 @@ public class UserServiceImpl implements UserService{
 
         if (authentication.isAuthenticated()) {
             String token = jwtService.generateToken(loginRequest.getUsername());
-            // Create a response object to send back
-            return ResponseEntity.ok(new JWTResponse(token)); // Assuming JwtResponse is a class you created for the token
+            return ResponseEntity.ok(new JWTResponse(token)); 
         }
 
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password"); // Change the response type here
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password"); 
     }
 
     @Override

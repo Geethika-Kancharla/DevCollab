@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 public class CodeMessageService {
@@ -15,23 +14,23 @@ public class CodeMessageService {
     private CodeMessageRepository codeMessageRepository;
 
     public CodeMessage saveOrUpdateCode(String username, String code, String language) {
-        // Find existing code message by username
+     
         CodeMessage existingCodeMessage = codeMessageRepository.findTopByUsernameOrderByLastUpdatedDesc(username).orElse(null);
 
         if (existingCodeMessage != null) {
-            // Update the existing message
+            
             existingCodeMessage.setCode(code);
             existingCodeMessage.setLanguage(language);
             existingCodeMessage.setLastUpdated(LocalDateTime.now());
-            return codeMessageRepository.save(existingCodeMessage); // Update existing document
+            return codeMessageRepository.save(existingCodeMessage);
         } else {
-            // Create a new code message if it doesn't exist
+          
             CodeMessage newCodeMessage = new CodeMessage();
             newCodeMessage.setUsername(username);
             newCodeMessage.setCode(code);
             newCodeMessage.setLanguage(language);
             newCodeMessage.setLastUpdated(LocalDateTime.now());
-            return codeMessageRepository.save(newCodeMessage); // Create new document
+            return codeMessageRepository.save(newCodeMessage); 
         }
     }
 

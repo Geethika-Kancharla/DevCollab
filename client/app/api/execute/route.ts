@@ -3,7 +3,7 @@ import axios from 'axios';
 import { LanguageOptions } from '@/app/components/Constants';
 
 const API = axios.create({
-    baseURL: "https://emkc.org/api/v2/piston"
+    baseURL: "https://devcollab-j76p.onrender.com/api/execute"
 });
 
 async function executeCode(language: string, sourceCode: string) {

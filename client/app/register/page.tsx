@@ -36,7 +36,6 @@ const Register = () => {
         setError('');
         setSuccess('');
 
-
         if (!formData.username || !formData.password) {
             setError('Both fields are required.');
             setIsSubmitting(false);
@@ -44,7 +43,7 @@ const Register = () => {
         }
 
         try {
-            const response = await axios.post('http://localhost:8080/register', formData);
+            const response = await axios.post('https://devcollab-j76p.onrender.com/register', formData);
 
             if (response.status === 200) {
                 setSuccess('User registered successfully');
