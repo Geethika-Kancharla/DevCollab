@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true", allowedHeaders = "*", exposedHeaders = "Authorization")
+@CrossOrigin(origins = {"https://dev-collab-eight.vercel.app/", "http://localhost:3000"}, allowCredentials = "true", allowedHeaders = "*", exposedHeaders = "Authorization")
 public class UserController {
 
     @Autowired
