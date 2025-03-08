@@ -5,10 +5,9 @@ import Editor from '@monaco-editor/react';
 import LanguageSelector from './LanguageSelector';
 import { HStack, Box } from '@chakra-ui/react';
 import Output from './Output';
-import { Client as StompClient } from 'stompjs';
+import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { editor } from 'monaco-editor';
-import Stomp from 'stompjs';
 
 interface CodeEditorProps {
     username: string;
@@ -16,44 +15,48 @@ interface CodeEditorProps {
 
 const CodeEditor: React.FC<CodeEditorProps> = ({ username }) => {
     const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
-    const clientRef = useRef<StompClient | null>(null);
+    const clientRef = useRef<Client | null>(null);
     const [code, setCode] = useState<string>("//Write your code here");
     const [language, setLanguage] = useState<string>("javascript");
     const isLocalUpdate = useRef(false);
 
     useEffect(() => {
-        const socket = new WebSocket("wss://devcollab-j76p.onrender.com/ws");
         const ws = new SockJS("https://devcollab-j76p.onrender.com/ws");
-        const stompClient = Stomp.over(ws);
+        const stompClient = new Client({
+            webSocketFactory: () => ws,
+            onConnect: () => {
+                console.log('Connected to WebSocket server.');
 
-        stompClient.connect({}, () => {
-            console.log('Connected to WebSocket server.');
+                stompClient.publish({
+                    destination: "/app/getLatestCode/" + username,
+                    body: JSON.stringify({
+                        username: username,
+                    })
+                });
 
-            stompClient.send("/app/getLatestCode/" + username, {}, JSON.stringify({
-                username: username,
-            }));
-
-            stompClient.subscribe("/topic/" + username, (message) => {
-                try {
-                    const data = JSON.parse(message.body);
-                    // Only update if it's not a local change
-                    if (!isLocalUpdate.current && data.code) {
-                        setCode(data.code);
-                        if (data.language) {
-                            setLanguage(data.language);
+                stompClient.subscribe("/topic/" + username, (message) => {
+                    try {
+                        const data = JSON.parse(message.body);
+                        // Only update if it's not a local change
+                        if (!isLocalUpdate.current && data.code) {
+                            setCode(data.code);
+                            if (data.language) {
+                                setLanguage(data.language);
+                            }
                         }
+                    } catch (error) {
+                        console.error('Error processing message:', error);
                     }
-                } catch (error) {
-                    console.error('Error processing message:', error);
-                }
-            });
+                });
+            }
         });
 
+        stompClient.activate();
         clientRef.current = stompClient;
 
         return () => {
-            if (stompClient.connected) {
-                stompClient.disconnect();
+            if (stompClient.active) {
+                stompClient.deactivate();
             }
         };
     }, [username]);
@@ -64,12 +67,15 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ username }) => {
         isLocalUpdate.current = true;
         setCode(newCode);
 
-        if (clientRef.current?.connected) {
-            clientRef.current.send("/app/editor/" + username, {}, JSON.stringify({
-                username: username,
-                code: newCode,
-                language: language,
-            }));
+        if (clientRef.current?.active) {
+            clientRef.current.publish({
+                destination: "/app/editor/" + username,
+                body: JSON.stringify({
+                    username: username,
+                    code: newCode,
+                    language: language,
+                })
+            });
         }
         setTimeout(() => {
             isLocalUpdate.current = false;
@@ -78,12 +84,15 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ username }) => {
 
     const onSelect = (newLanguage: string) => {
         setLanguage(newLanguage);
-        if (clientRef.current?.connected) {
-            clientRef.current.send("/app/editor/" + username, {}, JSON.stringify({
-                username: username,
-                code: code,
-                language: newLanguage,
-            }));
+        if (clientRef.current?.active) {
+            clientRef.current.publish({
+                destination: "/app/editor/" + username,
+                body: JSON.stringify({
+                    username: username,
+                    code: code,
+                    language: newLanguage,
+                })
+            });
         }
     };
 
