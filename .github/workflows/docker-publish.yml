@@ -6,10 +6,6 @@ on:
   pull_request:
     branches: [ "main" ]
 
-env:
-  DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
-  DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
-
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -27,11 +23,11 @@ jobs:
         with:
           context: ./server
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/devcollab-backend:latest
+          tags: "${{ secrets.DOCKER_HUB_USERNAME }}/devcollab-backend:latest"
 
       - name: Build and push frontend
         uses: docker/build-push-action@v4
         with:
           context: ./client
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/devcollab-frontend:latest 
+          tags: "${{ secrets.DOCKER_HUB_USERNAME }}/devcollab-frontend:latest" 
