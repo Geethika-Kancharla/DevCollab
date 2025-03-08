@@ -25,13 +25,13 @@ jobs:
       - name: Build and push backend
         uses: docker/build-push-action@v4
         with:
-          context: ./BloodServe-backend
+          context: ./server
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/devcollab-backend:latest
 
       - name: Build and push frontend
         uses: docker/build-push-action@v4
         with:
-          context: ./frontend
+          context: ./client
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/devcollab-frontend:latest 
