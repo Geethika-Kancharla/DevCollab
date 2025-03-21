@@ -1,84 +1,67 @@
-# DevCollab
+# **DevCollab**  
 
-DevCollab is a real-time collaborative code editor that enables multiple users to write and edit code simultaneously. Built with Next.js and Tailwind CSS for the frontend and Spring Boot for the backend, it provides a secure and efficient platform for real-time code collaboration through WebSocket technology and JWT authentication.
+**DevCollab** is a real-time collaborative code editor that enables multiple users to write and edit code simultaneously.  
 
-## Features
+---
 
-- **Real-Time Code Collaboration:** Multiple users can edit code simultaneously with instant synchronization
-- **Syntax Highlighting:** Support for multiple programming languages with automatic syntax highlighting
-- **Secure Authentication:** JWT-based authentication system ensuring secure access to collaborative sessions
-- **WebSocket Integration:** Real-time updates and communication between users using WebSocket protocol
-- **Responsive Design:** Fully responsive interface that works seamlessly across all devices
-- **Multiple Language Support:** Supports various programming languages including JavaScript, Python, Java, and C
+## 🌐 Try It Here
 
-## Tech Stack
+👉 **[Click the link above to try out BloodServe live!](https://blood-serve.vercel.app/)**  
 
-### Frontend
-- **Next.js** 
-- **Tailwind CSS**
-- **TypeScript**
-- **SockJS & STOMP** 
-- **Monaco Editor** 
+---
 
-### Backend
-- **Spring Boot**
-- **WebSocket**
-- **JWT**
+## 🚀 **Features**  
 
-### Database
-- **MongoDB**
+✅ **Real-Time Code Collaboration** – Multiple users can edit code simultaneously with instant synchronization.  
 
-## Installation
+✅ **Syntax Highlighting** – Supports multiple programming languages with automatic syntax highlighting.  
 
-### Prerequisites
+✅ **Secure Authentication** – JWT-based authentication ensures secure access to collaborative sessions.  
 
-- Node.js (v16 or higher)
-- Java JDK 17 or higher
-- MongoDB
-- Maven
+✅ **WebSocket Integration** – Enables real-time updates and communication between users.    
 
-### Setup
+✅ **Multiple Language Support** – Supports **JavaScript, Python, Java, C**.  
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Geethika-Kancharla/DevCollab
+---
+
+## 🛠 **Tech Stack**  
+
+### **Frontend**  
+-  **Next.js** – React-based framework for fast, scalable web applications.  
+-  **Tailwind CSS** – Utility-first CSS framework for a sleek UI.  
+-  **TypeScript** – Adds static typing for better maintainability.  
+-  **SockJS & STOMP** – WebSocket-based communication protocol for real-time collaboration.   
+
+### **Backend**  
+-  **Spring Boot** – Robust backend framework for scalable API development.  
+-  **WebSocket** – Enables real-time bidirectional communication.  
+
+### **Database**  
+-  **MongoDB** – NoSQL database for efficient session storage and user data management.
+
+### Deployment & DevOps  
+
+- Dockerized with **GitHub Actions** automating CI/CD—pushing images to **DockerHub** on each push event.  
+- Frontend deployed on **Vercel**, backend on **Render** for seamless scalability.  
+
+
+--- 
+
+## 🐳 Docker Setup
+
+To run the application using Docker:
+
+1. Navigate to the project root directory.
+2. Build and start the containers:
+   ```sh
+   docker-compose up --build
    ```
+3. The application should now be accessible at **http://localhost:3000** (frontend) and **http://localhost:8080** (backend).
 
-2. Frontend Setup:
-   ```bash
-   cd client
-   npm install
-   ```
+---
 
-3. Backend Setup - Configure MongoDB in application.properties:
-   ```properties
-   spring.data.mongodb.uri=mongodb://localhost:27017/codecollab
-   spring.data.mongodb.database=your_database_name
-   ```
+## 📜 **License**  
 
-4. Start the Backend:
-   ```bash
-   cd server
-   mvn spring-boot:run
-   ```
+This project is licensed under the **MIT License** – see the [LICENSE](./LICENSE) file for details.  
 
-5. Start the Frontend:
-   ```bash
-   cd client
-   npm run dev
-   ```
-
-The application will be available at http://localhost:3000
-
-## Usage
-
-- **Create Session:** Start a new coding session and share the session ID
-- **Join Session:** Enter a session ID to join an existing collaboration
-- **Real-Time Editing:** All changes are instantly synchronized across all participants
-- **Language Selection:** Choose from various supported programming languages
-- **Code Execution:** Run code directly in the browser
-
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+---
